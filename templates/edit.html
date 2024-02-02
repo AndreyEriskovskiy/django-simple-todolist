@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+
+{% block content %}
+    {% for t in task %}
+        <div class="content d-flex flex-column p-4 gap-4 py-md-5 w-100">
+
+            <form class="d-flex rounded-4 w-100 h-50 m-0 flex-column align-items-center" action="{% url "edit" t.id %}" method="post">
+                {% csrf_token %}
+
+                <textarea name="task_description" class="form-control w-100 h-50 m-0 me-2">{{ t.description }}</textarea>
+                <button type="submit" class="edit btn btn-primary text-white mt-4 w-10 align-items-center rounded-5">Редактировать</button>
+                
+            </form>
+        </div>
+    {% endfor %}
+{% endblock content %}

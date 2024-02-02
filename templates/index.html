@@ -1,0 +1,94 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/list-groups/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/list-groups.css" %}" rel="stylesheet">
+    <title>ToDoList</title>
+</head>
+
+<body>
+    
+    {% block content %}
+        <div class="content d-flex flex-column p-4 gap-4 py-md-5 align-items-center justify-content-center">
+            <form class="d-flex" action="{% url "main" %}" method="post">
+                {% csrf_token %}
+                <input class="form-control me-2"  name="task" placeholder="Новая задача..." aria-label="">
+                <button class="btn btn-primary text-white" type="submit">Добавить</button>
+            </form>
+            <div class="list-group">
+                {% if tasks %}
+                    <form class="rounded-4" action="{% url "main" %}" method="post">
+                        <label class="list-group-item d-flex gap-3 justify-content-between">
+                            {% csrf_token %}
+                        </label>
+                        
+                        <label class="list-group-item d-flex gap-3 justify-content-between">
+                            
+                            <input class="form-check-input flex-shrink-0" type="checkbox" name="all" value="all" id="selectAll"
+                                style="font-size: 1.375em;">
+                        </label>
+                        {% for task in tasks %}
+                            <label class="list-group-item d-flex gap-3 justify-content-between">
+                                <input class="form-check-input flex-shrink-0" type="checkbox" name="task_id" value="{{ task.id }}" style="font-size: 1.375em;">
+                                <span class="pt-1 form-checked-content w-100 text-lg-center">
+                                    
+                                    <strong>{{ task.description|truncatechars:30 }}</strong>
+                                    <small class="d-block text-body-secondary align-items-center">
+
+                                        {% if task.datetime_joined == task.datetime_updated %}
+                                            {{ task.datetime_joined|date:"d.m.Y H:i:s" }}
+                                        {% else %}
+                                            {{ task.datetime_updated|date:"d.m.Y H:i:s" }}
+                                            (обновлено)
+                                        {% endif %}
+                                        
+                                    </small>
+                                </span>
+                                <button type="button" name="edit" value="edit" class="icon-button">
+                                    <a href="{% url "edit" task.id %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                        </svg>
+                                    </a>
+                                </button>
+
+                                <button type="submit" name="delete_one" value="{{ task.id }}" class="icon-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red"
+                                        class="bi bi-trash3-fill" viewBox="0 0 16 16">
+
+                                        <path
+                                            d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5">
+                                        </path>
+                                    </svg>
+                                    
+                                </button>
+                            </label>
+                        {% endfor %}
+                        
+                        <label class="list-group-item d-flex gap-3 justify-content-center">
+                            <button class="btn btn-outline-danger rounded-5" id="delete_all" name="delete_all" value="delete_all" type="submit" disabled>Очистить все</button>
+                        </label>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock content %}
+    
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/enable_checkboxes.js" %}"></script>
+    
+    
+</body>
+
+</html>

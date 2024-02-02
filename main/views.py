@@ -26,7 +26,7 @@ def to_do_list(request: HttpRequest):
     
     
     else:
-        all_tasks = Task.objects.all().order_by('-datetime_joined')
+        all_tasks = Task.objects.all().order_by('-datetime_joined').order_by('-datetime_updated')
         
 
     
@@ -40,7 +40,7 @@ def edit_list(request: HttpRequest, task_id=False):
             task = Task.objects.get(id=task_id)
             task.description = updated_task
             task.save()
-            all_tasks = Task.objects.all().order_by('-datetime_joined')
+            all_tasks = Task.objects.all().order_by('-datetime_joined').order_by('-datetime_updated')
             
         return render(request, 'index.html', context={'tasks': all_tasks})
             
